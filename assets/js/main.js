@@ -114,20 +114,22 @@
   prev.className = "previa";
   prev.setAttribute("aria-hidden", "true");
   prev.innerHTML =
-    '<div class="previa-borda"></div><div class="previa-img"><img alt=""></div>' +
-    '<div class="previa-rodape"><span></span><span>Abre no Power BI</span></div>';
+    '<div class="previa-corpo"><div class="previa-borda"></div><div class="previa-img"><img alt=""></div>' +
+    '<div class="previa-rodape"><span></span><span>Abre no Power BI</span></div></div>';
   document.body.appendChild(prev);
-  var pImg = prev.querySelector("img"), pNome = prev.querySelector(".previa-rodape span");
+  var pImg = prev.querySelector("img");
+  pImg.addEventListener("load", function () { pImg.classList.remove("troca"); });
+  var _x, pNome = prev.querySelector(".previa-rodape span");
 
-  var mx = 0, my = 0, x = 0, y = 0, ativo = false, rodando = false;
+  var mx = 0, my = 0, x = 0, y = 0, inc = 0, ativo = false, rodando = false;
   function loop() {
-    x += (mx - x) * 0.09; y += (my - y) * 0.09;
+    x += (mx - x) * 0.065; y += (my - y) * 0.065;
     var w = prev.offsetWidth, h = prev.offsetHeight;
     var px = mx + 32 + w > innerWidth ? x - w - 32 : x + 32;
     var py = Math.min(Math.max(y - h / 2, 16), innerHeight - h - 16);
-    var inc = Math.max(-6, Math.min(6, (mx - x) * 0.08));
+    inc += (Math.max(-3, Math.min(3, (mx - x) * 0.04)) - inc) * 0.08;
     prev.style.transform = "translate3d(" + px + "px," + py + "px,0) rotate(" + inc + "deg)";
-    if (ativo || Math.abs(mx - x) > 0.5) requestAnimationFrame(loop); else rodando = false;
+    if (ativo || Math.abs(mx - x) > 0.3 || Math.abs(inc) > 0.05) requestAnimationFrame(loop); else rodando = false;
   }
   addEventListener("mousemove", function (e) {
     mx = e.clientX; my = e.clientY;
@@ -138,7 +140,12 @@
     var sec = a.closest(".frente");
     a.addEventListener("mouseenter", function (e) {
       if (!ativo) { x = mx = e.clientX; y = my = e.clientY; }
-      pImg.src = a.dataset.previa;
+      if (pImg.getAttribute("src") !== a.dataset.previa) {
+        if (ativo || prev.classList.contains("on")) {
+          pImg.classList.add("troca");
+          setTimeout(function () { pImg.src = a.dataset.previa; }, 180);
+        } else pImg.src = a.dataset.previa;
+      }
       pNome.textContent = a.querySelector("h3").textContent;
       prev.style.setProperty("--c", getComputedStyle(sec).getPropertyValue("--c"));
       prev.classList.add("on"); ativo = true;

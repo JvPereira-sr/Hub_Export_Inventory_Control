@@ -165,14 +165,19 @@ h1 em { font-style: normal; color: var(--green); }
 /* prévia que segue o cursor */
 .previa {
   position: fixed; left: 0; top: 0; z-index: 40; pointer-events: none;
-  width: 440px; border-radius: 14px; overflow: hidden; background: #fff;
-  box-shadow: 0 24px 60px -20px rgba(1, 33, 105, .35), 0 0 0 1px rgba(1, 33, 105, .08);
-  opacity: 0; transform: translate3d(-999px, -999px, 0); transition: opacity .45s var(--suave);
+  width: 440px; transform: translate3d(-999px, -999px, 0); will-change: transform;
 }
-.previa.on { opacity: 1; }
-.previa-borda { height: 3px; background: var(--c, var(--navy)); }
-.previa-img { aspect-ratio: 16 / 9; overflow: hidden; }
-.previa-img img { width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+.previa-corpo {
+  border-radius: 14px; overflow: hidden; background: #fff;
+  box-shadow: 0 24px 60px -20px rgba(1, 33, 105, .35), 0 0 0 1px rgba(1, 33, 105, .08);
+  opacity: 0; transform: scale(.9) translateY(12px); transform-origin: 0 50%;
+  transition: opacity .6s var(--suave), transform .9s var(--ease);
+}
+.previa.on .previa-corpo { opacity: 1; transform: none; }
+.previa-borda { height: 3px; background: var(--c, var(--navy)); transition: background .6s var(--suave); }
+.previa-img { aspect-ratio: 16 / 9; overflow: hidden; background: var(--bg-soft); }
+.previa-img img { width: 100%; height: 100%; object-fit: cover; object-position: top left; transition: opacity .35s var(--suave), transform .9s var(--ease); }
+.previa-img img.troca { opacity: 0; transform: scale(1.03); }
 .previa-rodape { display: flex; justify-content: space-between; padding: 10px 14px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); }
 
 /* ---------- Rodapé ---------- */
