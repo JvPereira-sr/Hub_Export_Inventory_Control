@@ -121,7 +121,7 @@
 
   var mx = 0, my = 0, x = 0, y = 0, ativo = false, rodando = false;
   function loop() {
-    x += (mx - x) * 0.14; y += (my - y) * 0.14;
+    x += (mx - x) * 0.09; y += (my - y) * 0.09;
     var w = prev.offsetWidth, h = prev.offsetHeight;
     var px = mx + 32 + w > innerWidth ? x - w - 32 : x + 32;
     var py = Math.min(Math.max(y - h / 2, 16), innerHeight - h - 16);
